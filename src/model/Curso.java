@@ -1,6 +1,9 @@
 package model;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
     public class Curso {
         private final int id;
@@ -10,6 +13,7 @@ import java.time.LocalDate;
         private int cargaHoraria;
         private boolean exclusivo;
         private LocalDate dataLancamento;
+        private final List<Modulo> modulos = new ArrayList<>();
 
         public Curso(int id, String nome, String categoria, String area,int cargaHoraria, boolean exclusivo, LocalDate dataLancamento) {
             if (nome == null || nome.isBlank()) {
@@ -47,6 +51,20 @@ import java.time.LocalDate;
         }
         public LocalDate getDataLancamento() {
             return dataLancamento;
+        }
+        public void adicionarModulo(Modulo modulo) {
+            if (modulo == null) {
+                throw new IllegalArgumentException("Módulo obrigatório");
+            }
+            modulos.add(modulo);
+        }
+
+        public List<Modulo> getModulos() {
+            return Collections.unmodifiableList(modulos);
+        }
+
+        public int getTotalAulas() {
+            return modulos.stream().mapToInt(m -> m.getAulas().size()).sum();
         }
     }
 
