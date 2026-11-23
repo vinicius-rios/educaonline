@@ -1,7 +1,7 @@
 package model;
 
-import exception.MatriculaDuplicadaException;
-import exception.TurmaCheiaException;
+import excecoes.MatriculaDuplicadaException;
+import excecoes.TurmaCheiaException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

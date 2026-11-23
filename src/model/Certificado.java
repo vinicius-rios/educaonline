@@ -1,6 +1,6 @@
 package model;
 
-import exception.CertificadoNaoEmitidoExcecao;
+import excecoes.CertificadoNaoEmitidoException;
 
 import java.time.LocalDate;
 import java.util.UUID;
@@ -12,9 +12,9 @@ public class Certificado {
     private final double mediaFinal;
     private final LocalDate dataEmissao;
 
-    public Certificado(Matricula matricula) throws CertificadoNaoEmitidoExcecao {
+    public Certificado(Matricula matricula) throws CertificadoNaoEmitidoException {
         if (!matricula.aprovado()) {
-            throw new CertificadoNaoEmitidoExcecao(String.format(
+            throw new CertificadoNaoEmitidoException(String.format(
                     "Aluno não aprovado (média %.1f, %.0f%% das aulas concluídas). " +
                             "É preciso média %.1f e %.0f%% das aulas.",
                     matricula.calcularMediaFinal(), matricula.percentualConcluido(),
