@@ -1,14 +1,14 @@
 package model;
 
+import java.time.LocalDate;
+
 public class Assinatura extends Pagamento {
-    public Assinatura(int id, Aluno aluno) {
-        super(id, aluno);
+    public Assinatura(int id, Aluno aluno, LocalDate data) {
+        super(id, aluno, data);
     }
 
     @Override
-    public double getValor() {
-        return getAluno().valorMensalidade();
-    }
+    public double getValor() { return getAluno().valorMensalidade(); }
 
     @Override
     public String getDescricao() {

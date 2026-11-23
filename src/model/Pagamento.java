@@ -8,12 +8,15 @@ public abstract class Pagamento {
     private final LocalDate data;
 
     protected Pagamento(int id, Aluno aluno) {
+        this(id, aluno, LocalDate.now());
+    }
+    protected Pagamento(int id, Aluno aluno, LocalDate data) {
         if (aluno == null) {
             throw new IllegalArgumentException("Aluno obrigatório");
         }
         this.id = id;
         this.aluno = aluno;
-        this.data = LocalDate.now();
+        this.data = data;
     }
 
     public int getId() {

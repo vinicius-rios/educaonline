@@ -3,9 +3,11 @@ package service;
 import excecoes.CertificadoNaoEmitidoException;
 import excecoes.MatriculaDuplicadaException;
 import excecoes.TurmaCheiaException;
-import exception.*;
+import excecoes.*;
 import exception.AcessoNegadoException;
 import model.*;
+import repository.ArquivoRepositorio;
+import java.io.IOException;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -19,12 +21,46 @@ public class EducaOnlineService {
     private final List<Pagamento> pagamentos = new ArrayList<>();
     private final List<Chamado> chamados = new ArrayList<>();
     private final PriorityQueue<Chamado> filaChamados = new PriorityQueue<>();
+    private final ArquivoRepositorio repositorio = new ArquivoRepositorio();
 
     private int proximoId = 1;
 
-    private int novoId() {
-        return proximoId++;
-    }
+    private int novoId() { return proximoId++; }
+        public EducaOnlineService() {
+            carregar();
+        }
+
+        private void carregar() {
+            alunos.addAll(repositorio.carregarAlunos());
+            cursos.addAll(repositorio.carregarCursos());
+            turmas.addAll(repositorio.carregarTurmas(cursos));
+            matriculas.addAll(repositorio.carregarMatriculas(alunos, turmas));
+            repositorio.carregarAvaliacoes(matriculas);
+            pagamentos.addAll(repositorio.carregarPagamentos(alunos, cursos));
+            atualizarProximoId();
+        }
+
+        public void salvar() throws IOException {
+            repositorio.salvarTudo(alunos, cursos, turmas, matriculas, pagamentos);
+        }
+
+        private void atualizarProximoId() {
+            int maior = 0;
+            for (Aluno a : alunos) maior = Math.max(maior, a.getId());
+            for (Curso c : cursos) {
+                maior = Math.max(maior, c.getId());
+                for (Modulo m : c.getModulos()) {
+                    maior = Math.max(maior, m.getId());
+                    for (Aula aula : m.getAulas()) maior = Math.max(maior, aula.getId());
+                }
+            }
+            for (Turma t : turmas) maior = Math.max(maior, t.getId());
+            for (Matricula m : matriculas) {
+                for (Avaliacao av : m.getAvaliacoes()) maior = Math.max(maior, av.getId());
+            }
+            for (Pagamento p : pagamentos) maior = Math.max(maior, p.getId());
+            proximoId = maior + 1;
+        }
 
     public Aluno cadastrarAluno(String nome, String email, boolean vip) {
         Aluno aluno = vip ? new AlunoVip(novoId(), nome, email)
@@ -119,7 +155,7 @@ public class EducaOnlineService {
     }
 
     public Pagamento registrarAssinatura(int alunoId) {
-        Pagamento pagamento = new Assinatura(novoId(), buscarAluno(alunoId));
+        Pagamento pagamento = new Assinatura(novoId(), buscarAluno(alunoId), LocalDate.now());
         pagamentos.add(pagamento);
         return pagamento;
     }

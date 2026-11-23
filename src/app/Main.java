@@ -6,7 +6,7 @@ import excecoes.TurmaCheiaException;
 import excecoes.*;
 import model.*;
 import service.EducaOnlineService;
-
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Scanner;
 
@@ -37,9 +37,12 @@ public class Main {
                     case 0 -> System.out.println("Encerrando...");
                     default -> System.out.println("Opção inválida.");
                 }
+                servico.salvar();
             } catch (IllegalArgumentException | IllegalStateException | TurmaCheiaException
                      | MatriculaDuplicadaException | exception.AcessoNegadoException | CertificadoNaoEmitidoException e) {
                 System.out.println("Erro: " + e.getMessage());
+            } catch (IOException e) {
+                System.out.println("Erro ao salvar os dados: " + e.getMessage());
             }
         }
     }

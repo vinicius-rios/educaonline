@@ -56,6 +56,9 @@ public class Matricula {
     public Turma getTurma() {
         return turma;
     }
+    public Set<Integer> getIdsAulasConcluidas() {
+        return Collections.unmodifiableSet(aulasConcluidas);
+    }
     public List<Avaliacao> getAvaliacoes() {
         return Collections.unmodifiableList(avaliacoes);
     }
